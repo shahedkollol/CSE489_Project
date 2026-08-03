@@ -1,0 +1,233 @@
+```mermaid
+erDiagram
+  TOURNAMENT ||--o{ ROUND : has
+  TOURNAMENT ||--o{ TEAM : has
+  TOURNAMENT ||--o{ ADJUDICATOR : has
+  TOURNAMENT ||--o{ SPEAKER_CATEGORY : defines
+  TOURNAMENT ||--o{ VENUE : has
+  TOURNAMENT ||--o{ VENUE_CATEGORY : defines
+  TOURNAMENT ||--o{ BREAK_CATEGORY : defines
+  TOURNAMENT ||--o{ ADJUDICATOR_FEEDBACK_QUESTION : defines
+  REGION ||--o{ INSTITUTION : groups
+  INSTITUTION ||--o{ TEAM : affiliated
+  INSTITUTION ||--o{ ADJUDICATOR : affiliated
+  TEAM ||--o{ SPEAKER : has
+  SPEAKER }o--o{ SPEAKER_CATEGORY : tagged_with
+  ADJUDICATOR ||--o{ ADJUDICATOR_TEAM_CONFLICT : declares
+  TEAM ||--o{ ADJUDICATOR_TEAM_CONFLICT : flagged_in
+  ADJUDICATOR ||--o{ ADJUDICATOR_INSTITUTION_CONFLICT : declares
+  INSTITUTION ||--o{ ADJUDICATOR_INSTITUTION_CONFLICT : flagged_in
+  ADJUDICATOR ||--o{ ADJUDICATOR_ADJUDICATOR_CONFLICT : declares
+  ADJUDICATOR ||--o{ ADJUDICATOR_ADJUDICATOR_CONFLICT : conflicts_with
+  ROUND ||--o{ DEBATE : has
+  VENUE ||--o{ DEBATE : hosts
+  VENUE_CATEGORY ||--o{ VENUE : groups
+  VENUE_CATEGORY ||--o{ VENUE_CONSTRAINT : sets
+  DEBATE ||--o{ DEBATE_TEAM : assigns
+  TEAM ||--o{ DEBATE_TEAM : competes_in
+  DEBATE ||--o{ DEBATE_ADJUDICATOR : assigns
+  ADJUDICATOR ||--o{ DEBATE_ADJUDICATOR : judges
+  MOTION ||--o{ ROUND_MOTION : tracked_in
+  ROUND ||--o{ ROUND_MOTION : tracks
+  SUBMISSION ||--|| BALLOT_SUBMISSION : extends
+  SUBMISSION ||--|| ADJUDICATOR_FEEDBACK : extends
+  DEBATE ||--o{ BALLOT_SUBMISSION : produces
+  ADJUDICATOR ||--o{ ADJUDICATOR_FEEDBACK : receives
+  BALLOT_SUBMISSION ||--o{ TEAM_SCORE : records
+  TEAM ||--o{ TEAM_SCORE : scored_in
+  BALLOT_SUBMISSION ||--o{ SPEAKER_SCORE : records
+  SPEAKER ||--o{ SPEAKER_SCORE : scored_in
+  SPEAKER_SCORE ||--o{ SPEAKER_SCORE_BY_ADJ : splits_into
+  ADJUDICATOR ||--o{ SPEAKER_SCORE_BY_ADJ : gives
+  ADJUDICATOR_FEEDBACK_QUESTION ||--o{ ADJUDICATOR_FEEDBACK_ANSWER : answered_by
+  ADJUDICATOR_FEEDBACK ||--o{ ADJUDICATOR_FEEDBACK_ANSWER : contains
+  BREAK_CATEGORY ||--o{ BREAKING_TEAM : includes
+  TEAM ||--o{ BREAKING_TEAM : breaks_in
+  USER ||--o{ USER_ROLE : has
+
+  TOURNAMENT {
+    uuid id PK
+    string name
+    string slug
+    string format
+  }
+  ROUND {
+    uuid id PK
+    uuid tournament_id FK
+    int round_no
+    string draw_type
+    string stage
+    bool motion_released
+    bool silent
+  }
+  REGION {
+    uuid id PK
+    string name
+  }
+  INSTITUTION {
+    uuid id PK
+    uuid region_id FK
+    string name
+  }
+  TEAM {
+    uuid id PK
+    uuid tournament_id FK
+    uuid institution_id FK
+    string name
+    string type
+    bool use_institution_prefix
+  }
+  SPEAKER {
+    uuid id PK
+    uuid team_id FK
+    string name
+  }
+  SPEAKER_CATEGORY {
+    uuid id PK
+    uuid tournament_id FK
+    string name
+  }
+  ADJUDICATOR {
+    uuid id PK
+    uuid tournament_id FK
+    uuid institution_id FK
+    string name
+    float test_score
+    bool independent
+    bool chair_eligible
+  }
+  ADJUDICATOR_TEAM_CONFLICT {
+    uuid id PK
+    uuid adjudicator_id FK
+    uuid team_id FK
+  }
+  ADJUDICATOR_INSTITUTION_CONFLICT {
+    uuid id PK
+    uuid adjudicator_id FK
+    uuid institution_id FK
+  }
+  ADJUDICATOR_ADJUDICATOR_CONFLICT {
+    uuid id PK
+    uuid adjudicator_id_a FK
+    uuid adjudicator_id_b FK
+  }
+  VENUE {
+    uuid id PK
+    uuid tournament_id FK
+    uuid category_id FK
+    string name
+    int priority
+  }
+  VENUE_CATEGORY {
+    uuid id PK
+    uuid tournament_id FK
+    string name
+  }
+  VENUE_CONSTRAINT {
+    uuid id PK
+    uuid category_id FK
+    string subject_type
+    uuid subject_id
+    int priority
+  }
+  DEBATE {
+    uuid id PK
+    uuid round_id FK
+    uuid venue_id FK
+  }
+  DEBATE_TEAM {
+    uuid id PK
+    uuid debate_id FK
+    uuid team_id FK
+    string side
+  }
+  DEBATE_ADJUDICATOR {
+    uuid id PK
+    uuid debate_id FK
+    uuid adjudicator_id FK
+    string role
+  }
+  MOTION {
+    uuid id PK
+    string text
+  }
+  ROUND_MOTION {
+    uuid id PK
+    uuid round_id FK
+    uuid motion_id FK
+  }
+  SUBMISSION {
+    uuid id PK
+    bool confirmed
+    bool discarded
+    int version
+    string submitter
+    string ip_address
+    timestamp submitted_at
+  }
+  BALLOT_SUBMISSION {
+    uuid id PK
+    uuid submission_id FK
+    uuid debate_id FK
+  }
+  ADJUDICATOR_FEEDBACK {
+    uuid id PK
+    uuid submission_id FK
+    uuid adjudicator_id FK
+    uuid source_debate_id FK
+  }
+  TEAM_SCORE {
+    uuid id PK
+    uuid ballot_submission_id FK
+    uuid team_id FK
+    int points
+    bool win
+    float margin
+  }
+  SPEAKER_SCORE {
+    uuid id PK
+    uuid ballot_submission_id FK
+    uuid speaker_id FK
+    float score
+  }
+  SPEAKER_SCORE_BY_ADJ {
+    uuid id PK
+    uuid speaker_score_id FK
+    uuid adjudicator_id FK
+    float score
+  }
+  ADJUDICATOR_FEEDBACK_QUESTION {
+    uuid id PK
+    uuid tournament_id FK
+    string text
+    string answer_type
+  }
+  ADJUDICATOR_FEEDBACK_ANSWER {
+    uuid id PK
+    uuid feedback_id FK
+    uuid question_id FK
+    string value
+  }
+  BREAK_CATEGORY {
+    uuid id PK
+    uuid tournament_id FK
+    string name
+    int break_size
+  }
+  BREAKING_TEAM {
+    uuid id PK
+    uuid break_category_id FK
+    uuid team_id FK
+    int rank
+  }
+  USER {
+    uuid id PK
+    string username
+    string email
+  }
+  USER_ROLE {
+    uuid id PK
+    uuid user_id FK
+    string role
+  }
+```
