@@ -1,1 +1,68 @@
+============================================================
+           AI USAGE DECLARATION
+============================================================
 
+Name: Shahed Parves Kallol
+Student ID: 23101263
+Assignment: CSE489 - Project Idea Declaration (Debate Tab Soft)
+Date: August 4, 2026
+
+------------------------------------------------------------
+1. AI TOOLS USED (check all that apply)
+------------------------------------------------------------
+[x] GitHub Copilot
+[x] Claude
+------------------------------------------------------------
+2. PURPOSE OF AI USE (check all that apply)
+------------------------------------------------------------
+[x] Learning/understanding concepts
+[ ] Debugging my code
+[x] Generating code snippets
+[x] Writing text content
+[x] Design/styling ideas
+[ ] Image generation
+[ ] Other: ________________
+
+------------------------------------------------------------
+3. DESCRIPTION OF AI USE
+------------------------------------------------------------
+Brief description of AI Uses:
+
+Used Claude to research and scope my personal project idea (a debate
+tournament tabulation app, "Debate Tab Soft"), including checking the
+idea against the domain areas of 59 already-approved Summer/Spring
+2026 project ideas to confirm there was no overlap. Claude explained
+the object/data model of an existing open-source reference system
+(Tabbycat) at a conceptual level, which I used to understand standard
+debate-tabulation concepts (draws, ballots, adjudicator conflicts,
+standings). I then had Claude generate a list of features to cross-check
+If I were missing anything, to build my Wireframe Diagram, I built the 
+entity-relationship Schema Diagram (as Mermaid mmd format) for the app 
+where AI was not used, and drafted the text of my project declaration 
+document (features list, references, future enhancements) based on 
+decisions I made about scope. I reviewed, adjusted the scope of, and took 
+responsibility for all of the final content.
+
+------------------------------------------------------------
+4. AI-ASSISTED SECTIONS
+------------------------------------------------------------
+List specific files/sections where AI helped significantly:
+
+File: debate_app_wireframe.pdf    Section: Screen wireframe (admin/participant/public flows)
+File: Shahed_Parves_Kallol_23101263_DebateTabSoft.docx  Section: Online Resources section 
+
+------------------------------------------------------------
+5. DECLARATION
+------------------------------------------------------------
+I declare that:
+- This disclosure is complete and accurate
+- I understand all code in my submission
+- I can explain and modify my work if asked
+- I take full responsibility for my submission
+
+Signature: _SHAHED PARVES KALLOL_
+Date: _04.08.2026________________
+
+============================================================
+Save as: docs/AI_Declaration.txt
+============================================================
