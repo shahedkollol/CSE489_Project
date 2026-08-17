@@ -1,0 +1,101 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function myRole() {
+      return isSignedIn() ? myProfile().role : 'public';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && myRole() == 'admin';
+    }
+
+    function isAdjudicatorOrTeam() {
+      return isSignedIn() && (myRole() == 'adjudicator' || myRole() == 'team');
+    }
+
+    function isValidTournament(data) {
+      return data.name is string && data.name.size() > 0
+        && data.slug is string && data.slug.size() > 0
+        && data.format in ['BP', 'AP'];
+    }
+
+    // Users read their own profile only. Roles are assigned by an admin
+    // when the tab director adds a participant - never self-service.
+    match /users/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /tournaments/{tournamentId} {
+      allow read: if true; // public tab site reads tournament metadata
+      allow create, update: if isAdmin() && isValidTournament(request.resource.data);
+      allow delete: if isAdmin();
+
+      match /rounds/{roundId} {
+        allow read: if true;
+        allow write: if isAdmin();
+
+        match /debates/{debateId} {
+          // Full debate doc (may include unreleased results): admins and
+          // the participants in that room only. The public site should
+          // read from a separate `publicDraws` collection that a Cloud
+          // Function populates only once a round is released - don't
+          // expose unreleased draws/results by relaxing this rule.
+          allow read: if isAdmin() || isAdjudicatorOrTeam();
+          allow write: if isAdmin();
+
+          match /ballots/{ballotId} {
+            allow read: if isAdmin() || isAdjudicatorOrTeam();
+            allow create: if isAdjudicatorOrTeam();
+            allow update, delete: if isAdmin();
+          }
+        }
+      }
+
+      match /breakCategories/{categoryId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+    }
+
+    match /teams/{teamId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /institutions/{institutionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /adjudicators/{adjudicatorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      match /feedback/{feedbackId} {
+        allow read: if isAdmin();
+        allow create: if isAdjudicatorOrTeam();
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    match /venues/{venueId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /motions/{motionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

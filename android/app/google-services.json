@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "121336374429",
+    "project_id": "debate-tab-app",
+    "storage_bucket": "debate-tab-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121336374429:android:ce557d9f49f5a686a7a074",
+        "android_client_info": {
+          "package_name": "com.example.debate_tab_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClCp1HSLpTcrevQugVfufD1f6WAuNLAAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
