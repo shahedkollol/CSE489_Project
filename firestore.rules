@@ -40,24 +40,39 @@ service cloud.firestore {
       allow create, update: if isAdmin() && isValidTournament(request.resource.data);
       allow delete: if isAdmin();
 
+      match /teams/{teamId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /venues/{venueId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /motions/{motionId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /draws/{drawId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /ballots/{ballotId} {
+        allow read: if isAdmin() || resource.data.isPublished == true;
+        allow create, update: if isAdmin();
+        allow delete: if isAdmin();
+      }
+
       match /rounds/{roundId} {
         allow read: if true;
         allow write: if isAdmin();
 
         match /debates/{debateId} {
-          // Full debate doc (may include unreleased results): admins and
-          // the participants in that room only. The public site should
-          // read from a separate `publicDraws` collection that a Cloud
-          // Function populates only once a round is released - don't
-          // expose unreleased draws/results by relaxing this rule.
           allow read: if isAdmin() || isAdjudicatorOrTeam();
           allow write: if isAdmin();
-
-          match /ballots/{ballotId} {
-            allow read: if isAdmin() || isAdjudicatorOrTeam();
-            allow create: if isAdjudicatorOrTeam();
-            allow update, delete: if isAdmin();
-          }
         }
       }
 

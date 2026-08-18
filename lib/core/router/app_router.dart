@@ -7,10 +7,16 @@ import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/domain/app_user.dart';
 import '../../features/auth/presentation/login_page.dart';
 import '../../features/auth/presentation/splash_page.dart';
+import '../../features/ballots/presentation/ballot_page.dart';
+import '../../features/draw/presentation/draw_page.dart';
+import '../../features/motions/presentation/motion_page.dart';
+import '../../features/participants/presentation/team_page.dart';
 import '../../features/public/presentation/public_home_page.dart';
+import '../../features/standings/presentation/standings_page.dart';
 import '../../features/tournaments/presentation/tournament_dashboard_page.dart';
 import '../../features/tournaments/presentation/tournament_form_page.dart';
 import '../../features/tournaments/presentation/tournament_list_page.dart';
+import '../../features/venues/presentation/venue_page.dart';
 
 /// Centralizes all role-based routing. This is the piece that replaces the
 /// wireframe's "tap a role button" screen: it decides where a signed-in
@@ -43,6 +49,42 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/admin/tournaments/:id/edit',
         builder: (context, state) {
           return TournamentFormPage(tournamentId: state.pathParameters['id']);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/participants',
+        builder: (context, state) {
+          return TeamPage(tournamentId: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/venues',
+        builder: (context, state) {
+          return VenuePage(tournamentId: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/motions',
+        builder: (context, state) {
+          return MotionPage(tournamentId: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/draw',
+        builder: (context, state) {
+          return DrawPage(tournamentId: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/ballots',
+        builder: (context, state) {
+          return BallotPage(tournamentId: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/admin/tournaments/:id/standings',
+        builder: (context, state) {
+          return StandingsPage(tournamentId: state.pathParameters['id']!);
         },
       ),
       GoRoute(
